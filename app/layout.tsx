@@ -3,7 +3,7 @@ import React from 'react'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: '🖥️ Server Monitoring',
+  title: 'Server Monitoring',
   description: 'Real-time server monitoring dashboard',
   generator: 'v0.dev',
 }
