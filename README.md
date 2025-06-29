@@ -51,7 +51,7 @@ sudo sensors-detect --auto
 ### Step 2: Setup Project
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/visual-alchemy/serverdashboard.git
 cd server-dashboard
 npm install
 # Use legacy mode if needed:
