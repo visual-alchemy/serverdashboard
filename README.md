@@ -52,7 +52,7 @@ sudo sensors-detect --auto
 
 ```bash
 git clone https://github.com/visual-alchemy/serverdashboard.git
-cd server-dashboard
+cd serverdashboard
 npm install
 # Use legacy mode if needed:
 npm install --legacy-peer-deps
