@@ -1,14 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Experimental features to handle dynamic routes better
+  // Experimental features
   experimental: {
-    // Disable static optimization completely for problematic routes
-    staticPageGenerationTimeout: 0,
+    // Add supported experimental features here if needed
   },
-  // Explicitly exclude API routes from static generation
-  async generateStaticParams() {
-    return []
-  },
+  // Note: generateStaticParams should be in page components, not in next.config.mjs
+  // Removing this as it's causing the error
   // Configure output to handle dynamic routes
   output: 'standalone',
   // Disable static optimization for the entire app if needed

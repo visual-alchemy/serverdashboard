@@ -6,6 +6,11 @@ export const metadata: Metadata = {
   title: 'Server Monitoring',
   description: 'Real-time server monitoring dashboard',
   generator: 'v0.dev',
+  icons: {
+    icon: '/ghst.png',
+    apple: '/ghst.png',
+    shortcut: '/ghst.png'
+  },
 }
 
 export default function RootLayout({
