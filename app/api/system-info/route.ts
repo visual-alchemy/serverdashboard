@@ -119,7 +119,7 @@ async function getSystemInfo() {
     getNetworkStats(),
     getCPUTemperature(),
     getProcessCount(),
-    getCPUSpeed(), // Add this line
+    getCPUSpeed(),
   ])
 
   const totalMem = os.totalmem()
@@ -134,7 +134,7 @@ async function getSystemInfo() {
       cores: cpus.length,
       model: cpus[0]?.model || "Unknown",
       temperature: cpuTemp,
-      speed: cpuSpeed, // Add this line
+      speed: cpuSpeed,
     },
     memory: {
       total: totalMem,
@@ -155,27 +155,61 @@ export async function GET(request: NextRequest) {
 
   const stream = new ReadableStream({
     start(controller) {
+      // Track if the controller is closed to prevent errors
+      let isClosed = false
+
       const sendData = async () => {
+        // Check if controller is closed before sending data
+        if (isClosed) {
+          return
+        }
+
         try {
           const systemInfo = await getSystemInfo()
           const data = `data: ${JSON.stringify(systemInfo)}\n\n`
-          controller.enqueue(encoder.encode(data))
+
+          // Double-check before enqueuing to prevent race conditions
+          if (!isClosed) {
+            controller.enqueue(encoder.encode(data))
+          }
         } catch (error) {
           console.error("Error getting system info:", error)
+          // If there's an error, mark as closed to prevent further attempts
+          if (!isClosed) {
+            isClosed = true
+            try {
+              controller.close()
+            } catch (closeError) {
+              // Controller might already be closed, ignore this error
+            }
+          }
         }
       }
 
       // Send initial data
       sendData()
 
-      // Send updates every 5 seconds (changed from 2000ms to 5000ms)
+      // Send updates every 5 seconds
       const interval = setInterval(sendData, 5000)
 
-      // Cleanup on close
-      request.signal.addEventListener("abort", () => {
+      // Cleanup function when connection is closed
+      const cleanup = () => {
+        isClosed = true
         clearInterval(interval)
-        controller.close()
-      })
+        try {
+          if (!controller.desiredSize === null) {
+            controller.close()
+          }
+        } catch (error) {
+          // Controller already closed, ignore error
+        }
+      }
+
+      // Listen for client disconnect
+      request.signal.addEventListener("abort", cleanup)
+
+      // Additional cleanup for when the stream is cancelled
+      return cleanup
     },
   })
 
@@ -184,6 +218,8 @@ export async function GET(request: NextRequest) {
       "Content-Type": "text/event-stream",
       "Cache-Control": "no-cache",
       Connection: "keep-alive",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Headers": "Cache-Control",
     },
   })
 }
