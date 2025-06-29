@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/1bba1511-1758-4498-9645-94b0f71cd5aa)# 🖥️ Server Dashboard
+🖥️ Server Dashboard
 
 <div align="center">
 
@@ -27,7 +27,7 @@
 
 ## 📸 Preview
 
-![Dashboard Preview](![image](https://github.com/user-attachments/assets/5e23692d-27d6-450b-a32d-aac31f432bdf)
+![Dashboard Preview](![image](https://github.com/user-attachments/assets/5e23692d-27d6-450b-a32d-aac31f432bdf))
 
 ---
 
